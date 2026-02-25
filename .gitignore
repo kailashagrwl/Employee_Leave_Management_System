@@ -1,0 +1,32 @@
+# Node.js
+node_modules/
+dist/
+build/
+.npm
+npm-debug.log*
+
+# Environment Variables (CRITICAL - DO NOT REMOVE)
+.env
+.env.local
+.env.*.local
+
+# Server specific
+server/node_modules/
+server/uploads/
+server/.env
+
+# Frontend specific
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+logs
+*.log

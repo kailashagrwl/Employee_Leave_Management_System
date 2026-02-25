@@ -1,0 +1,19 @@
+{
+  "name": "employe-management-system",
+  "version": "1.0.0",
+  "description": "A full-stack Employee Leave Management System built with the MERN stack (MongoDB, Express, React, Node.js). This system simulates a real company HR workflow where employees can request leave, and managers/admins can review them.",
+  "main": "index.js",
+  "scripts": {
+    "server": "npm start --prefix server",
+    "frontend": "npm run dev --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run frontend\"",
+    "install-all": "npm install && npm install --prefix server && npm install --prefix frontend"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
