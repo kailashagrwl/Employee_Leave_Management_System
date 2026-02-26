@@ -55,8 +55,6 @@ app.use(cors({
   maxAge: 86400 // 24 hours
 }));
 
-// Preflight handler
-app.options('*', cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
