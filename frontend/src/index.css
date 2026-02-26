@@ -7,9 +7,18 @@
   line-height: 1.5;
   font-weight: 400;
 
+  /* Theme variables (light defaults) */
+  --bg: #f9fafb;
+  --surface: #ffffff;
+  --muted: #6b7280;
+  --subtext: #9ca3af;
+  --text: #111827;
+  --card-border: rgba(0,0,0,0.04);
+  --accent: #10b981; /* emerald-500 */
+
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #f3f4f6;
+  color: var(--text);
+  background-color: var(--bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -21,8 +30,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  color: #1f2937;
-  background-color: #f9fafb;
+  color: var(--text);
+  background-color: var(--bg);
 }
 
 #root {
@@ -34,7 +43,7 @@ body {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(0,0,0,0.04);
 }
 
 .dark-glass {
@@ -81,11 +90,143 @@ body {
   background: transparent;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #e5e7eb;
-  border-radius: 10px;
-}
 
 ::-webkit-scrollbar-thumb:hover {
   background: #d1d5db;
 }
+
+/* Dark theme variables and overrides */
+.dark {
+  --bg: #071423;
+  --surface: #0b1520;
+  --muted: #7d8b97;
+  --subtext: #97a7b5;
+  --text: #e6eef8;
+  --card-border: rgba(255,255,255,0.04);
+  --accent: #5dd7b1;
+}
+
+/* === Core surface & text overrides === */
+.dark body { background-color: var(--bg); color: var(--text); }
+.dark .bg-white { background-color: var(--surface) !important; }
+.dark .bg-gray-50 { background-color: rgba(255,255,255,0.02) !important; }
+.dark .bg-gray-100 { background-color: rgba(255,255,255,0.05) !important; }
+.dark .border-gray-100 { border-color: var(--card-border) !important; }
+.dark .text-gray-800 { color: var(--text) !important; }
+.dark .text-gray-700 { color: #d4dce6 !important; }
+.dark .text-gray-600 { color: var(--muted) !important; }
+.dark .text-gray-500 { color: var(--subtext) !important; }
+.dark .text-gray-400 { color: rgba(255,255,255,0.45) !important; }
+
+/* === Shadows & depth === */
+.dark .shadow-sm { box-shadow: 0 8px 24px rgba(2,6,23,0.5) !important; }
+.dark .shadow-md { box-shadow: 0 12px 32px rgba(2,6,23,0.6) !important; }
+
+/* === Inputs & forms === */
+.dark input, .dark textarea, .dark select, .dark .form-control {
+  background-color: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+/* === Glass effect === */
+.dark .glass { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03); }
+
+/* === Tables === */
+.dark thead tr th, .dark .table-header { background-color: rgba(255,255,255,0.02) !important; color: var(--muted); }
+.dark tbody tr { background-color: transparent; }
+.dark tbody tr:hover { background-color: rgba(255,255,255,0.01) !important; }
+
+/* === Accent colors === */
+.dark .text-emerald-600 { color: var(--accent) !important; }
+.dark .bg-emerald-50 { background-color: rgba(93,215,177,0.06) !important; }
+.dark .bg-emerald-100 { background-color: rgba(93,215,177,0.08) !important; }
+
+/* === Status/role badges (all types) === */
+.dark .bg-purple-100 { background-color: rgba(168,85,247,0.1) !important; }
+.dark .text-purple-600 { color: #c084fc !important; }
+.dark .bg-blue-100 { background-color: rgba(59,130,246,0.1) !important; }
+.dark .text-blue-600 { color: #60a5fa !important; }
+.dark .bg-sky-50 { background-color: rgba(14,165,233,0.06) !important; }
+.dark .text-sky-700 { color: #38bdf8 !important; }
+
+/* === Soften white/bright badge highlights === */
+.dark .inline-flex.rounded-full.bg-white,
+.dark .inline-block.rounded-full.bg-white,
+.dark .w-8.h-8.rounded-full.bg-white,
+.dark .inline-flex.items-center.justify-center.rounded-full,
+.dark span.inline-flex.rounded-full {
+  background-color: rgba(255,255,255,0.06) !important;
+  color: var(--text) !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* === Reduce bright white text on badges === */
+.dark .inline-block.text-\[10px\].font-bold,
+.dark pre,
+.dark code {
+  background-color: rgba(255,255,255,0.02) !important;
+  color: var(--text) !important;
+}
+
+/* === Sidebar tweaks === */
+.dark .sidebar {
+  background-color: var(--surface) !important;
+  border-right: 1px solid var(--card-border) !important;
+}
+
+/* === Sidebar profile area container === */
+.dark .sidebar > div:last-child {
+  background-color: rgba(255,255,255,0.01) !important;
+  border-top: 1px solid var(--card-border) !important;
+}
+
+/* === Profile card === */
+.dark .sidebar .bg-white.rounded-2xl.border {
+  background-color: var(--surface) !important;
+  border-color: var(--card-border) !important;
+  box-shadow: 0 4px 12px rgba(2,6,23,0.3) !important;
+}
+
+.dark .sidebar .bg-emerald-100 {
+  background-color: rgba(93,215,177,0.08) !important;
+}
+
+.dark .sidebar .text-emerald-600 {
+  color: var(--accent) !important;
+}
+
+.dark .sidebar .text-gray-800 {
+  color: var(--text) !important;
+}
+
+/* === Sidebar nav links === */
+.dark .sidebar .bg-emerald-50 {
+  background-color: rgba(93,215,177,0.08) !important;
+}
+
+.dark .sidebar .hover\:bg-gray-50:hover {
+  background-color: rgba(255,255,255,0.02) !important;
+}
+
+.dark .sidebar .text-gray-500 {
+  color: var(--muted) !important;
+}
+
+/* === Sign out button in dark mode === */
+.dark .sidebar .text-red-500 {
+  color: #ff6b6b !important;
+}
+
+.dark .sidebar .text-red-500:hover,
+.dark .sidebar button:hover.text-red-500 {
+  background-color: rgba(255,107,107,0.08) !important;
+}
+
+.dark .sidebar button.hover\:bg-red-50:hover {
+  background-color: rgba(255,107,107,0.08) !important;
+}
+
+/* === Scrollbar === */
+.dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); }
+.dark ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.12); }

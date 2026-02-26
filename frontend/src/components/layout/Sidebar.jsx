@@ -49,7 +49,7 @@ const Sidebar = ({ closeSidebar }) => {
     ];
 
     return (
-        <div className="w-full h-full min-h-screen bg-white flex flex-col">
+        <div className="sidebar w-full h-full min-h-screen bg-white flex flex-col">
             {/* Branding - Fixed at Top */}
             <div className="p-6 flex-shrink-0 flex items-center space-x-3 border-b border-transparent">
                 <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">

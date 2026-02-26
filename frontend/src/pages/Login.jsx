@@ -103,7 +103,7 @@ const Login = () => {
                                         <input
                                             type="email"
                                             required
-                                            className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-emerald-500/20 focus:ring-4 focus:ring-emerald-500/5 transition-all duration-300 font-bold text-gray-800 placeholder:text-gray-300 text-sm outline-none"
+                                            className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-emerald-500/20 focus:ring-4 focus:ring-emerald-500/5 transition-all duration-300  text-gray-800 placeholder:text-gray-300 text-sm outline-none"
                                             placeholder="email@company.com"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}

@@ -9,6 +9,7 @@ import {
     CalendarCheck
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import ThemeToggle from '../components/common/ThemeToggle';
 
 /* ─────────────────────────────────────────────────────
    Shared sub-components
@@ -131,7 +132,8 @@ const ManagerDashboard = ({ stats, myLeaves, allLeaves, holidays, handleCancel, 
                     <div>
                         <SectionHeader
                             icon={<Users className="w-5 h-5" />}
-                            title={managerDept ? `${managerDept} Department — Leave Requests` : 'Team Leave Requests'}
+                            // title={managerDept ? `${managerDept} Department — Leave Requests` : 'Team Leave Requests'}
+                            title="Department Leave Requests"
                             badge={`${allLeaves.filter(l => l.status === 'Pending').length} Pending`}
                         />
                     </div>
@@ -391,10 +393,10 @@ const AdminDashboard = ({ allLeaves, holidays, handleReviewClick }) => {
                                             </td>
                                             <td className="px-5 py-4 text-sm font-bold text-emerald-600">{leave.days}d</td>
                                             <td className="px-5 py-4">
-                                                {leave.status === 'Pending' ? (
+                                                {leave.status === 'Pending' || leave.status === 'Rejected' ? (
                                                     <div className="flex justify-center space-x-2">
-                                                        <button onClick={() => handleReviewClick(leave._id, 'Approved')} className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg border border-emerald-100"><CheckCircle2 className="w-4 h-4" /></button>
-                                                        <button onClick={() => handleReviewClick(leave._id, 'Rejected')} className="p-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-100"><XCircle className="w-4 h-4" /></button>
+                                                        <button onClick={() => handleReviewClick(leave._id, 'Approved')} className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg border border-emerald-100" title={leave.status === 'Rejected' ? 'Override rejection and approve' : 'Approve'}><CheckCircle2 className="w-4 h-4" /></button>
+                                                        <button onClick={() => handleReviewClick(leave._id, 'Rejected')} className="p-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-100" title={leave.status === 'Rejected' ? 'Keep rejected' : 'Reject'}><XCircle className="w-4 h-4" /></button>
                                                     </div>
                                                 ) : (
                                                     <div className="flex justify-center"><StatusBadge status={leave.status} /></div>
@@ -503,8 +505,23 @@ const Dashboard = () => {
                 const allLeavesRes = await axios.get('/leaves');
                 setAllLeaves(allLeavesRes.data);
             }
-            checkUserLoggedIn();
+            // we were calling checkUserLoggedIn here for good measure, but the
+            // component already relies on the auth context and re-runs when
+            // "user" changes. an extra request on every dashboard refresh was
+            // triggering a 401 toast when the cookie hadn't been set yet.
         } catch (error) {
+            // if the request failed because the user is not authenticated we
+            // don't want to spam a toast; the auth context will redirect or
+            // clear the user anyway.
+            if (error.response?.status === 401) {
+                console.warn('dashboard fetch returned 401, logging out');
+                // make sure auth state is cleared so protected routes kick in
+                // you could also call logout() from context if exposed
+                checkUserLoggedIn();
+                return;
+            }
+
+            console.error('dashboard fetch error', error);
             toast.error('Failed to fetch dashboard data');
         }
     };
@@ -549,6 +566,7 @@ const Dashboard = () => {
                             className="p-3 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md hover:border-emerald-100 transition-all text-emerald-600 group">
                             <CalendarCheck className="w-6 h-6 group-hover:scale-110 transition-transform" />
                         </button>
+                        <ThemeToggle />
                     </div>
                 </header>
 

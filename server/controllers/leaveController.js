@@ -155,23 +155,36 @@ exports.updateLeaveStatus = async (req, res) => {
                     message: `You can only manage leaves for employees in the ${manager.department} department`
                 });
             }
+            
+            // Manager cannot override a rejection to approve it (only Admin can)
+            if (leave.status === 'Rejected' && status === 'Approved') {
+                return res.status(403).json({
+                    message: 'Only administrators can approve previously rejected leaves'
+                });
+            }
         }
 
-        // If approving, deduct from balance
-        if (status === 'Approved' && leave.status !== 'Approved') {
-            const typeMap = {
-                'Sick Leave': 'sickLeave',
-                'Casual Leave': 'casualLeave',
-                'Annual Leave': 'annualLeave',
-                'Maternity Leave': 'maternityLeave',
-                'Paternity Leave': 'paternityLeave'
-            };
-            const balanceField = typeMap[leave.leaveType];
+        const typeMap = {
+            'Sick Leave': 'sickLeave',
+            'Casual Leave': 'casualLeave',
+            'Annual Leave': 'annualLeave',
+            'Maternity Leave': 'maternityLeave',
+            'Paternity Leave': 'paternityLeave'
+        };
+        const balanceField = typeMap[leave.leaveType];
 
-            if (balanceField) {
-                const balance = await LeaveBalance.findOne({ userId: leave.user._id });
-                if (balance) {
+        // Handle balance changes
+        if (balanceField) {
+            const balance = await LeaveBalance.findOne({ userId: leave.user._id });
+            if (balance) {
+                // If approving (not already approved), deduct from balance
+                if (status === 'Approved' && leave.status !== 'Approved') {
                     balance[balanceField] -= leave.days;
+                    await balance.save();
+                }
+                // If rejecting a previously approved leave, refund the balance
+                else if (status === 'Rejected' && leave.status === 'Approved') {
+                    balance[balanceField] += leave.days;
                     await balance.save();
                 }
             }

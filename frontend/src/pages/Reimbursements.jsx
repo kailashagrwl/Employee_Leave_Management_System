@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { getFileUrl } from '../utils/api.js';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import {
     Receipt, Plus, History, Filter, CheckCircle2, XCircle, X,
@@ -311,18 +312,18 @@ const Reimbursements = () => {
                                                 <td className="px-6 py-4"><StatusBadge status={item.status} /></td>
                                                 <td className="px-6 py-4 text-center text-gray-400">
                                                     {item.receiptUrl ? (
-                                                        <a href={`http://localhost:5000${item.receiptUrl}`} target="_blank" rel="noreferrer"
+                                                        <a href={getFileUrl(item.receiptUrl)} target="_blank" rel="noreferrer"
                                                             className="p-2 hover:bg-emerald-50 hover:text-emerald-600 transition-colors inline-block rounded-lg">
                                                             <Paperclip className="w-5 h-5" />
                                                         </a>
                                                     ) : <span className="text-[10px] italic">No receipt</span>}
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
-                                                    {(user.role === 'Admin' || (user.role === 'Manager' && item.employeeId?._id !== user._id && item.employeeId?.role !== 'Manager')) && item.status === 'Pending' ? (
+                                                    {(user.role === 'Admin' || (user.role === 'Manager' && item.employeeId?._id !== user._id && item.employeeId?.role !== 'Manager')) && (item.status === 'Pending' || (item.status === 'Rejected' && user.role === 'Admin')) ? (
                                                         <button
                                                             onClick={() => openReviewModal(item)}
                                                             className="px-4 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition-all shadow-sm active:scale-95">
-                                                            Review
+                                                            {item.status === 'Rejected' ? 'Override' : 'Review'}
                                                         </button>
                                                     ) : (
                                                         <button onClick={() => toast.info(item.managerRemark || item.adminRemark || 'No remarks provided')} className="p-2 text-gray-400 hover:text-gray-600"><AlertCircle className="w-5 h-5" /></button>

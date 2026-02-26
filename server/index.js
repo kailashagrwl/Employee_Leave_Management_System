@@ -23,11 +23,20 @@ connectDB();
 // Middleware
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests from any localhost port (Vite can use 5173 or 5174+)
-    const allowed = !origin || /^http:\/\/localhost:\d+$/.test(origin);
-    callback(null, allowed ? origin : false);
+    // Allow localhost in dev and configured origins in production
+    const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+    const isLocalhost = !origin || /^http:\/\/localhost:\d+$/.test(origin);
+    const isAllowedOrigin = allowedOrigins.some(allowed => origin?.includes(allowed.trim()));
+    
+    if (isLocalhost || isAllowedOrigin) {
+      callback(null, origin);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(cookieParser());

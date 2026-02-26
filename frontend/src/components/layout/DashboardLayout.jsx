@@ -38,6 +38,7 @@ const DashboardLayout = ({ children }) => {
                     </div>
                 </header>
 
+
                 <main className="flex-1 overflow-x-hidden">
                     {children}
                 </main>

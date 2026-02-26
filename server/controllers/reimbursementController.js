@@ -101,6 +101,13 @@ exports.updateReimbursementAction = async (req, res) => {
             return res.status(403).json({ message: 'Manager requests can only be reviewed by an Admin' });
         }
 
+        // Security Check: Manager cannot override rejection to approve it (only Admin can)
+        if (reimbursement.status === 'Rejected' && status === 'Approved' && req.user.role !== 'Admin') {
+            return res.status(403).json({ 
+                message: 'Only administrators can approve previously rejected reimbursements' 
+            });
+        }
+
         if (req.user.role === 'Admin') {
             reimbursement.status = status;
             reimbursement.adminRemark = remark;
