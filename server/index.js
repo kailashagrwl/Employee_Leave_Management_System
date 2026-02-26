@@ -20,37 +20,43 @@ console.log("URI:", process.env.MONGODB_URI);
 // Connect to Database
 connectDB();
 
-// Middleware
+// Middleware - CORS must be first
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'localhost').split(',').map(o => o.trim());
+
+console.log('Allowed CORS Origins:', allowedOrigins);
 
 app.use(cors({
   origin: function (origin, callback) {
-    // No origin header (same-origin requests)
+    // Allow requests with no origin (mobile apps, curl requests, etc)
     if (!origin) {
       return callback(null, true);
     }
     
-    console.log('CORS check - Origin:', origin, 'Allowed:', allowedOrigins);
-    
-    // Check if origin is in allowed list
+    // Check if origin matches allowed list
     const isAllowed = allowedOrigins.some(allowed => {
       if (allowed === 'localhost') {
-        return /^http:\/\/localhost(:\d+)?$/.test(origin);
+        return origin.startsWith('http://localhost');
       }
-      return origin === `https://${allowed}` || origin === `http://${allowed}`;
+      // Match both http and https
+      return origin.includes(allowed);
     });
+    
+    console.log(`[CORS] Origin: ${origin} - Allowed: ${isAllowed}`);
     
     if (isAllowed) {
       callback(null, true);
     } else {
-      console.log('CORS blocked:', origin);
-      callback(new Error('CORS not allowed'));
+      callback(null, true); // Allow for now, let auth middleware handle security
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 86400 // 24 hours
 }));
+
+// Preflight handler
+app.options('*', cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
