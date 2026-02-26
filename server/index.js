@@ -21,17 +21,30 @@ console.log("URI:", process.env.MONGODB_URI);
 connectDB();
 
 // Middleware
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'localhost').split(',').map(o => o.trim());
+
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow localhost in dev and configured origins in production
-    const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
-    const isLocalhost = !origin || /^http:\/\/localhost:\d+$/.test(origin);
-    const isAllowedOrigin = allowedOrigins.some(allowed => origin?.includes(allowed.trim()));
+    // No origin header (same-origin requests)
+    if (!origin) {
+      return callback(null, true);
+    }
     
-    if (isLocalhost || isAllowedOrigin) {
-      callback(null, origin);
+    console.log('CORS check - Origin:', origin, 'Allowed:', allowedOrigins);
+    
+    // Check if origin is in allowed list
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (allowed === 'localhost') {
+        return /^http:\/\/localhost(:\d+)?$/.test(origin);
+      }
+      return origin === `https://${allowed}` || origin === `http://${allowed}`;
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.log('CORS blocked:', origin);
+      callback(new Error('CORS not allowed'));
     }
   },
   credentials: true,
