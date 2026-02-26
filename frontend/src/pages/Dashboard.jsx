@@ -48,8 +48,9 @@ const SectionHeader = ({ icon, title, badge }) => (
     </div>
 );
 
+
 /* ─────────────────────────────────────────────────────
-   EMPLOYEE PAGE
+   EMPLOYEEe PAGE
 ───────────────────────────────────────────────────── */
 const EmployeeDashboard = ({ stats, myLeaves, holidays, handleCancel }) => (
     <>
@@ -111,7 +112,7 @@ const EmployeeDashboard = ({ stats, myLeaves, holidays, handleCancel }) => (
 );
 
 /* ─────────────────────────────────────────────────────
-   MANAGER PAGE
+   MANAGER 
 ───────────────────────────────────────────────────── */
 const ManagerDashboard = ({ stats, myLeaves, allLeaves, holidays, handleCancel, handleReviewClick, managerDept }) => {
     const [teamFilter, setTeamFilter] = useState('Pending');
@@ -186,7 +187,7 @@ const ManagerDashboard = ({ stats, myLeaves, allLeaves, holidays, handleCancel, 
                                         {leave.status === 'Pending' ? (
                                             <div className="flex justify-center space-x-2">
                                                 <button onClick={() => handleReviewClick(leave._id, 'Approved')}
-                                                    className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg border border-emerald-100" title="Approve">
+                                                    className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg border border-emerald-200" title="Approve">
                                                     <CheckCircle2 className="w-4 h-4" />
                                                 </button>
                                                 <button onClick={() => handleReviewClick(leave._id, 'Rejected')}
